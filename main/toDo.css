@@ -12,43 +12,54 @@ body {
 #header {
     display: flex;
     flex-direction: column;
-    background: url("header.jpg");
     margin: 0;
     padding-top: 20px;
     text-align: center;
-    opacity: 0.9;
+    color: darkgoldenrod;
 }
 h1 {
     margin: 0 0 20px 0;
 }
 .deleteAllTasks {
-    border: 1px solid blueviolet;
+    font-size: 20px;
+    background-color: seagreen;
+    border: 1px solid black;
     border-radius: 5px;
-    height: 25px;
+    height: 30px;
     margin-left: 30px;
-    background-image: linear-gradient(to right, darkblue, darkred);
-    color: white;
+    /*background: none;*/
+    color: black;
     cursor: pointer;
+    transition: 0.5s;
 }
-input, button {
+.deleteAllTasks:hover {
+    scale: 1.05;
+    background: red;
+    color: white;
+}
+input {
     appearance: none;
     border: none;
     outline: none;
     background: none;
 }
+button {
+    border-radius: 10px;
+}
 #new_task_form {
     display: flex;
+    justify-content: space-evenly;
 }
 input::placeholder {
-    color: linen;
+    color: black;
 }
 #input_task {
-    flex: 1 1 0;
-    background-color: darkgrey;
+    width: 50%;
+    background-color: white;
     border-radius: 15px;
     padding: 15px;
     margin-right: 10px;
-    color: white;
+    color: black;
     font-size: 20px;
 }
 #submit_task {
@@ -65,11 +76,7 @@ input::placeholder {
     width: 100%;
 }
 #submit_task:hover {
-    opacity: 0.7;
-    font-size: 21px;
-}
-#submit_task:active {
-    opacity: 0.4;
+    scale: 1.05;
 }
 h2 {
     text-align: center;
@@ -114,13 +121,13 @@ h2 {
     text-decoration: line-through;
 }
 /* Remove margins and padding from the list */
-ul {
+.main_tasks ul {
     margin: 0;
     padding: 0;
 }
 
 /* Style the list items */
-li {
+.task {
     cursor: pointer;
     position: relative;
     padding: 12px 8px 12px 40px;
@@ -130,22 +137,22 @@ li {
 }
 
 /* Set all odd list items to a different color (zebra-stripes) */
-li:nth-child(odd) {
+.task:nth-child(odd) {
     background-color: lightslategrey;
 }
 
 /* Darker background-color on hover */
-li:hover {
+.task:hover {
     background: orange;
 }
 
 /* When clicked on, add a background color and strike out text */
-li.checked {
+.task.checked {
     background: limegreen;
 }
 
 /* Add a "checked" mark when clicked on */
-li.checked:before {
+.task.checked:before {
     content: '';
     position: absolute;
     border-color: #fff;
@@ -169,10 +176,7 @@ li.checked:before {
     transition: 0.5s;
 }
 .task_button_holder button:hover {
-    opacity: 0.8;
-}
-.task_button_holder button:active {
-    opacity: 0.5;
+    scale: 1.1;
 }
 .edit {
     text-decoration: none;
