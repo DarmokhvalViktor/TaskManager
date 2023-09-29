@@ -5,8 +5,8 @@
     <title>Title</title>
     <link rel="stylesheet" href="toDo.css">
     <link rel="stylesheet"
-          href=
-                  "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="calendar.css">
 </head>
 <body>
@@ -44,13 +44,16 @@
         </div>
     </div>
 
+    <div class="formAndH1Holder">
+        <div id="clock"></div>
+        <h1>Task manager</h1>
+        <form id="new_task_form">
+            <label for="input_task"></label>
+            <input type="text" name="new_task" placeholder="What are you planning to do?" id="input_task" required="required"/>
+            <button type="submit" id="submit_task">Add task</button>
+        </form>
+    </div>
 
-    <h1>Task manager</h1>
-    <form id="new_task_form">
-        <label for="input_task"></label>
-        <input type="text" name="new_task" placeholder="What are you planning to do?" id="input_task" required="required"/>
-        <button type="submit" id="submit_task">Add task</button>
-    </form>
 </div>
 <div id="main_tasks"></div>
 

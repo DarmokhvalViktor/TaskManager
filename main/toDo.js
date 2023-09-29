@@ -2,6 +2,7 @@ let form = document.getElementById("new_task_form");
 let input = document.getElementById("input_task");
 let main_task_element = document.getElementById("main_tasks");
 let tasksUl = document.createElement("ul");
+tasksUl.classList.add("mainUl");
 let h2Element = null;
 
 let tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -160,5 +161,4 @@ function submitTask() {
 
         input.value = "";
     }
-
 }

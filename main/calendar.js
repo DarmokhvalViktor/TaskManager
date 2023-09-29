@@ -1,6 +1,7 @@
 let date = new Date();
 let year = date.getFullYear();
 let month = date.getMonth();
+let clock = document.getElementById("clock");
 
 const day = document.querySelector(".calendar-dates");
 
@@ -77,6 +78,7 @@ const manipulate = () => {
 }
 
 manipulate();
+setInterval(createClock, 1);
 
 // Attach a click event listener to each icon
 prenexIcons.forEach(icon => {
@@ -113,3 +115,15 @@ prenexIcons.forEach(icon => {
         manipulate();
     });
 });
+
+function createClock() {
+    let date = new Date();
+    let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    let milliseconds = date.getMilliseconds();
+    let seconds = date.getSeconds();
+    let minutes = date.getMinutes();
+    let hours = date.getHours();
+    clock.textContent =
+        "Time now is: " + ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2) +
+        ":" + ("00" + milliseconds).slice(-3) + " Time zone: " + timeZone;
+}
