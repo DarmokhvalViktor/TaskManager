@@ -4,6 +4,7 @@ let main_task_element = document.getElementById("main_tasks");
 let tasksUl = document.createElement("ul");
 tasksUl.classList.add("mainUl");
 let h2Element = null;
+let trash_div = null;
 
 let tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks")) || [];
 
@@ -11,6 +12,27 @@ window.addEventListener("load", () => {
     if(tasksFromLocalStorage.length) {
         displayTasks();
     }
+    let all_notes = document.querySelectorAll("li a");
+    console.log(all_notes)
+
+    all_notes.forEach(function (note, index) {
+        note.addEventListener("keyup", function () {
+            let note_content = this.querySelector("p").textContent;
+
+            let item_key = "list_" + index;
+            let data = {
+                content: note_content
+            };
+            window.localStorage.setItem(item_key, JSON.stringify(data));
+        });
+
+        let data = JSON.parse(window.localStorage.getItem("list_" + index));
+        if (data !== null) {
+            note.querySelector("p").textContent = data.content;
+        }
+    });
+
+
     form.addEventListener("submit", (event) => {
         event.preventDefault();
         submitTask();
@@ -22,21 +44,6 @@ window.addEventListener("load", () => {
         }
     })
 })
-
-function editTask(task_edit_button, task_input_text) {
-    let dateNow = getDateNow();
-    if(task_edit_button.innerText.toLowerCase() === "edit") {
-        task_edit_button.innerText = "Save";
-        task_input_text.removeAttribute("readonly");
-        task_input_text.focus();
-        indexOfTask = tasksFromLocalStorage.find((object) => object.task === task_input_text.value);
-    } else {
-        task_edit_button.innerText = "Edit";
-        task_input_text.setAttribute("readonly", "readonly");
-        tasksFromLocalStorage[indexOfTask] = {task: task_input_text.value, date: dateNow, isCompleted: false};
-        localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage));
-    }
-}
 
 function createH2ElementIfNotPresent() {
     if(!h2Element) {
@@ -59,93 +66,71 @@ function createDeleteButton() {
 
 function displayTasks() {
     createH2ElementIfNotPresent();
+    let liCounter = 0;
     tasksFromLocalStorage.forEach((element) => {
-        createDivs(element.task,  "Task creation date: " + element.date, element.isCompleted);
+        createDivs(element.task,   ++liCounter);
     })
 }
 
-function createDivs(taskValue, dateValue, isCompleted) {
+function createDivs(taskValue, liCounter) {
+
     let task_element = document.createElement("li");
+    task_element.setAttribute("id",  "list_" + liCounter);
+    task_element.setAttribute("draggable", "true");
+    task_element.addEventListener("dragstart", (event) => {
+        event.dataTransfer.setData("Text",event.target.id);
+    } )
     task_element.classList.add("task");
 
-    let task_content_element = document.createElement("div");
+    if(!trash_div) {
+        trash_div = document.createElement("div");
+        trash_div.classList.add("trashDiv");
+        trash_div.addEventListener("drop", (event) => {
+            event.preventDefault();
+            let data=event.dataTransfer.getData("Text");
+            let el = document.getElementById(data);
+            el.parentNode.removeChild(el);
+        });
+        trash_div.addEventListener("dragover", (event) => {
+            event.preventDefault();
+        })
+        tasksUl.append(trash_div);
+    }
+
+    let task_content_element = document.createElement("a");
+    task_content_element.contentEditable = "true";
     task_content_element.classList.add("content");
 
-    let date_element = document.createElement("div");
-    date_element.classList.add("dateElement");
-    date_element.innerText = dateValue;
+    let parag = document.createElement("p");
+    parag.classList.add("textInParagraph")
+    parag.innerText = taskValue;
+    task_content_element.append(parag);
+    task_content_element.style.display = "block";
 
-    let taskAndButtonDiv = document.createElement("div");
-    taskAndButtonDiv.classList.add("taskAndButtonDiv");
 
-
-    let task_input_text = document.createElement("input");
-    task_input_text.classList.add("text");
-    task_input_text.type = "text";
-    task_input_text.value = taskValue;
-    task_input_text.setAttribute("readonly", "readonly");
-    task_content_element.appendChild(task_input_text);
-
-    let task_button_holder = document.createElement("div");
-    task_button_holder.classList.add("task_button_holder");
-
-    let task_edit_button = document.createElement("button");
-    task_edit_button.classList.add("edit");
-    task_edit_button.innerText = "Edit";
-
-    let task_delete_button = document.createElement("button");
-    task_delete_button.classList.add("delete");
-    task_delete_button.innerText = "Delete";
-
-    task_button_holder.append(task_edit_button, task_delete_button)
-
-    taskAndButtonDiv.append(task_content_element, task_button_holder)
-    task_element.prepend(date_element);
-    task_element.append(taskAndButtonDiv);
+    task_element.appendChild(task_content_element);
     tasksUl.append(task_element);
-    // task_element.append(task_content_element);
-    // tasksUl.append(task_element, task_button_holder);
 
     main_task_element.append(h2Element, tasksUl);
 
-    if(isCompleted) {
-        task_element.classList.toggle("checked");
-        task_input_text.classList.toggle("checked");
-        date_element.classList.toggle("checked");
-    }
+    // if(isCompleted) {
+    //     task_element.classList.toggle("checked");
+    //     task_content_element.classList.toggle("checked");
+    // }
 
-    task_element.addEventListener("click", (event) => {
-        event.preventDefault();
-        task_element.classList.toggle("checked");
-        task_input_text.classList.toggle("checked");
-        date_element.classList.toggle("checked");
-        let indexOfEl = tasksFromLocalStorage.findIndex(object => object.task === taskValue);
-        tasksFromLocalStorage[indexOfEl].isCompleted = !tasksFromLocalStorage[indexOfEl].isCompleted;
-        localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage));
-
-    });
+    // task_element.addEventListener("click", (event) => {
+    //     event.preventDefault();
+    //     task_element.classList.toggle("checked");
+    //     task_content_element.classList.toggle("checked");
+    //     let indexOfEl = tasksFromLocalStorage.findIndex(object => object.task === taskValue);
+    //     tasksFromLocalStorage[indexOfEl].isCompleted = !tasksFromLocalStorage[indexOfEl].isCompleted;
+    //     localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage));
+    //
+    // });
     //TODO need to add time, when task is finished, like added when task is created.
     //TODO add verification that user can't add same task again.
+//    TODO drag and drop stickers to delete
 
-    task_edit_button.addEventListener("click", () => {
-        editTask(task_edit_button, task_input_text);
-    });
-    task_delete_button.addEventListener("click", () => {
-        tasksUl.removeChild(task_element);
-        let indexOfEl = tasksFromLocalStorage.indexOf(dateValue);
-        tasksFromLocalStorage.splice(indexOfEl, 1);
-        localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage));
-    });
-}
-function getDateNow() {
-    let date = new Date();
-    let month = date.getMonth() + 1;
-    let day = date.getDay();
-    let year = date.getFullYear()
-    let hour= date.getHours();
-    let min= ("0" + date.getMinutes()).slice(-2);
-    let sec= date.getSeconds();
-    return year + "-" + month  + "-" + day + "___" + hour + ":" + min + ":" + sec;
 }
 
 function submitTask() {
@@ -153,12 +138,26 @@ function submitTask() {
     if(task) {
         createH2ElementIfNotPresent();
 
-        let dateNow = getDateNow();
-        createDivs( task, `Task creation date: ` + dateNow, false);
+        createDivs( task, false);
 
-        tasksFromLocalStorage.push({task: task, date: dateNow, isCompleted: false});
+        tasksFromLocalStorage.push({task: task, isCompleted: false});
         localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage));
 
         input.value = "";
     }
+}
+function allowDrop(ev)
+{
+    ev.preventDefault();
+}
+function drag(ev)
+{
+    ev.dataTransfer.setData("Text",ev.target.id);
+}
+function drop(ev)
+{
+    ev.preventDefault();
+    var data=ev.dataTransfer.getData("Text");
+    var el = document.getElementById(data);
+    el.parentNode.removeChild(el);
 }

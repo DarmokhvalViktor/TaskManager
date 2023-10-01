@@ -119,11 +119,10 @@ prenexIcons.forEach(icon => {
 function createClock() {
     let date = new Date();
     let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    let milliseconds = date.getMilliseconds();
     let seconds = date.getSeconds();
     let minutes = date.getMinutes();
     let hours = date.getHours();
     clock.textContent =
-        "Time now is: " + ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2) +
-        ":" + ("00" + milliseconds).slice(-3) + " Time zone: " + timeZone;
+        "Time now is: " + ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2)
+        + " Time zone: " + timeZone;
 }

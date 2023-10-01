@@ -11,7 +11,6 @@ body {
 
 #header {
     display: flex;
-    /*flex-direction: column;*/
     justify-content: space-evenly;
     align-items: center;
     margin: 0;
@@ -42,7 +41,6 @@ h1 {
     border-radius: 5px;
     height: 30px;
     margin-left: 30px;
-    /*background: none;*/
     color: black;
     cursor: pointer;
     transition: 0.5s;
@@ -51,12 +49,6 @@ h1 {
     scale: 1.05;
     background: red;
     color: white;
-}
-input {
-    appearance: none;
-    border: none;
-    outline: none;
-    background: none;
 }
 button {
     border-radius: 10px;
@@ -87,9 +79,6 @@ input::placeholder {
     cursor: pointer;
     transition: 0.5s;
 }
-.content {
-    width: 100%;
-}
 #submit_task:hover {
     scale: 1.05;
 }
@@ -98,114 +87,79 @@ h2 {
     text-align: center;
     color: black;
 }
+h3 {
+    font-size: 32px;
+    font-weight: bold;
+}
+.textInParagraph {
+    font-size: 20px;
+    color: black;
+    padding: 10px 0 0 10px;
+    /*font-family: 'Reenie Beanie', sans-serif;*/
+}
 .mainUl {
     /*display: grid;*/
     /*grid-template-columns: 1fr 1fr 1fr 1fr;*/
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 .task {
-    flex-direction: column;
-    display: flex;
-    justify-content: space-between;
-    background-color: lightsteelblue;
-    border-radius: 15px;
-    margin-bottom: 10px;
-    opacity: 0.90;
-
+    margin:1em;
 }
-.dateElement {
-    font-size: 20px;
-    color: lightgoldenrodyellow;
+ul, li {
+    list-style: none;
 }
-.dateElement.checked {
-    text-decoration: line-through;
-}
-.taskAndButtonDiv {
-    display: flex;
-    justify-content: space-between;
-    border-radius: 15px;
-    margin-bottom: 10px;
-    opacity: 0.90;
-}
-.text {
-    color: white;
-    font-size: 20px;
-    width: 100%;
-    display: block;
-    transition: 0.5s;
-    cursor: pointer;
-}
-.text:not(:read-only) {
-    color: darkviolet;
-}
-.text.checked {
-    text-decoration: line-through;
-}
-/* Remove margins and padding from the list */
-.main_tasks ul {
-    margin: 0;
-    padding: 0;
+ul li a {
+    text-decoration:none;
+    color:#000;
+    background:#ffc;
+    /*display:inline-block;*/
+    height: fit-content;
+    min-height:250px; /*10em*/
+    width:200px;; /*10em*/
+    padding:0; /*1em*/
+    box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+    transform: rotate(-6deg);
+    transition: transform .15s linear;
 }
 
-/* Style the list items */
-.task {
-    cursor: pointer;
-    position: relative;
-    padding: 12px 8px 12px 40px;
-    font-size: 18px;
-    transition: 0.5s;
-    border: 1px solid lightgoldenrodyellow;
+ul li:nth-child(even) a{
+    transform:rotate(4deg);
+    position:relative;
+    top:5px;
+    background: lightskyblue;
+}
+ul li:nth-child(3n) a{
+    transform:rotate(-3deg);
+    position:relative;
+    top:-5px;
+    background: lightgreen;
+}
+ul li:nth-child(5n) a{
+    transform:rotate(5deg);
+    position:relative;
+    background: pink;
+    top:-10px;
 }
 
-/* Set all odd list items to a different color (zebra-stripes) */
-.task:nth-child(odd) {
-    background-color: lightslategrey;
+ul li a:hover, ul li a:focus{
+    box-shadow:10px 10px 7px rgba(0,0,0,.7);
+    transform: scale(1.25);
+    position:relative;
+    z-index:5;
 }
-
-/* Darker background-color on hover */
-.task:hover {
-    background: orange;
-}
-
-/* When clicked on, add a background color and strike out text */
-.task.checked {
-    background: limegreen;
-}
-
-/* Add a "checked" mark when clicked on */
-.task.checked:before {
-    content: '';
+.trashDiv{
+    height: 128px;
+    width: 128px;
+    background-image: url("trash-can.png");
+    background-size: contain;
+    background-repeat: no-repeat;
     position: absolute;
-    border-color: #fff;
-    border-style: solid;
-    border-width: 0 2px 2px 0;
-    top: 25px;
-    left: 16px;
-    transform: rotate(45deg);
-    height: 15px;
-    width: 7px;
-}
-.task_button_holder {
-    display: flex;
-    margin: 0 -15px;
-}
-.task_button_holder button {
-    cursor: pointer;
-    margin: 0 15px;
-    font-size: 20px;
-    font-weight: 700;
+    right: 10px;
+    top: 50%;
     transition: 0.5s;
 }
-.task_button_holder button:hover {
-    scale: 1.1;
-}
-.edit {
-    text-decoration: none;
-    background-image: linear-gradient(to right, darkblue, darkred);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.delete {
-    color: crimson;
+.trashDiv:hover {
+    scale: 1.15;
 }
