@@ -25,7 +25,7 @@ window.addEventListener("load", () => {
             event.preventDefault();
             submitTask();
         }
-    })
+    });
 })
 
 function createH2ElementIfNotPresent() {
@@ -33,6 +33,7 @@ function createH2ElementIfNotPresent() {
         h2Element = document.createElement("h2");
         h2Element.innerText = "Tasks:";
         createDeleteButton();
+        createSortButton();
     }
 }
 function createDeleteButton() {
@@ -45,6 +46,14 @@ function createDeleteButton() {
         location.reload();
     });
     h2Element.appendChild(deleteAllTasksButton);
+}
+
+function createSortButton() {
+    let sortButton = document.createElement("button");
+    sortButton.innerText = `Sort tasks by priority`;
+    sortButton.classList.add("sortButton");
+    h2Element.appendChild(sortButton);
+    sortTaskByPriority(tasksFromLocalStorage);
 }
 
 function displayTasks() {
@@ -74,20 +83,27 @@ function createTrashDiv() {
 }
 function prioritizeTask(taskPriority) {
     switch (taskPriority) {
-        case '0':
+        case 0:
             return "urgent";
-        case '1':
+        case 1:
             return "important";
-        case '2':
+        case 2:
             return "medium";
-        case '3':
+        case 3:
             return "low";
     }
+}
+function sortTaskByPriority(tasksArray) {
+    tasksArray.sort((a, b) => a.priority.priorityNumber - b.priority.priorityNumber);
+}
+
+function sortTasksByDate(tasksArray) {
+
 }
 
 function createDivs(taskValue, taskPriority, dayAndTimeObject) {
 
-    let taskPrior = prioritizeTask(taskPriority)
+    let taskPrior = prioritizeTask(taskPriority.priorityNumber)
     let task_element = document.createElement("li");
     task_element.setAttribute("draggable", "true");
     task_element.addEventListener("dragstart", (event) => {
@@ -131,7 +147,20 @@ function createDivs(taskValue, taskPriority, dayAndTimeObject) {
 function submitTask() {
     let task = inputTask.value;
     let dayAndTime = inputDayAndTime.value;
-    let taskPriority = inputTaskImportance.options[inputTaskImportance.selectedIndex].value;
+    let dat2 = dayAndTime.split(" ");
+    let date0 = dat2[0].split("-");
+    let tempSwap = date0[0];
+    date0[0] = date0[1];
+    date0[1] = tempSwap;
+    console.log(date0);
+    dat2[0] = date0;
+
+    let dat3 = dayAndTime.split(/\W/);
+    console.log(dat2);
+    console.log(new Date(dat2));
+    console.log(new Date(dayAndTime))
+    let taskPriority = {priorityNumber: parseInt(inputTaskImportance.options[inputTaskImportance.selectedIndex].value),
+        priorityText: inputTaskImportance.options[inputTaskImportance.selectedIndex].text};
 
     if(task) {
         createH2ElementIfNotPresent();

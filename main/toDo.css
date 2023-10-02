@@ -50,6 +50,16 @@ h1 {
     background: red;
     color: white;
 }
+.sortButton {
+    font-size: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+    transition: 0.5s;
+}
+.sortButton:hover {
+    scale: 1.1;
+    background-color: lightgreen;
+}
 button {
     border-radius: 10px;
 }
