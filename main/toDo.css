@@ -56,12 +56,35 @@ button {
 #new_task_form {
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
+}
+#task_date_and_time_div {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+}
+#label_for_date_time_due {
+    font-size: 20px;
+}
+#task_weight {
+    font-size: 20px;
+}
+.pickADateAndTime {
+    margin-top: 10px;
+    height: 25px;
+    border-radius: 10px;
+}
+.dateAndTimeDiv {
+    padding: 5px 0 0 10px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 800;
 }
 input::placeholder {
     color: black;
 }
 #input_task {
-    width: 50%;
+    width: 100%;
     background-color: white;
     border-radius: 15px;
     padding: 15px;
@@ -72,6 +95,7 @@ input::placeholder {
 #submit_task {
     font-size: 20px;
     font-weight: 800;
+    height: 60px;
     border-radius: 15px;
     background-image: linear-gradient(to right, darkblue, darkred);
     -webkit-background-clip: text;
@@ -95,17 +119,16 @@ h3 {
     font-size: 20px;
     color: black;
     padding: 10px 0 0 10px;
-    /*font-family: 'Reenie Beanie', sans-serif;*/
+    margin: 0;
 }
 .mainUl {
-    /*display: grid;*/
-    /*grid-template-columns: 1fr 1fr 1fr 1fr;*/
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 .task {
     margin:1em;
+    cursor: pointer;
 }
 ul, li {
     list-style: none;
@@ -113,33 +136,58 @@ ul, li {
 ul li a {
     text-decoration:none;
     color:#000;
-    background:#ffc;
-    /*display:inline-block;*/
+    background:lightgrey;
     height: fit-content;
-    min-height:250px; /*10em*/
-    width:200px;; /*10em*/
-    padding:0; /*1em*/
+    min-height:300px;
+    width:250px;
+    padding:0;
     box-shadow: 5px 5px 7px rgba(33,33,33,.7);
     transform: rotate(-6deg);
     transition: transform .15s linear;
+}
+
+.urgent {
+    transform:rotate(-5deg);
+    position:relative;
+    top:5px;
+    background: red;
+}
+.important {
+    transform:rotate(-3deg);
+    position:relative;
+    top:-5px;
+    background: coral;
+}
+.medium {
+    transform:rotate(2deg);
+    position:relative;
+    background: yellow;
+    top:-10px;
+}
+.low {
+    transform:rotate(-7deg);
+    position:relative;
+    background: lightgreen;
+    top:-4px;
+}
+.priorityElem {
+    font-size: 20px;
+    text-align: center;
 }
 
 ul li:nth-child(even) a{
     transform:rotate(4deg);
     position:relative;
     top:5px;
-    background: lightskyblue;
 }
 ul li:nth-child(3n) a{
     transform:rotate(-3deg);
     position:relative;
     top:-5px;
-    background: lightgreen;
 }
 ul li:nth-child(5n) a{
     transform:rotate(5deg);
     position:relative;
-    background: pink;
     top:-10px;
 }
 

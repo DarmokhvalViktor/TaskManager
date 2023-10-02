@@ -78,7 +78,8 @@ const manipulate = () => {
 }
 
 manipulate();
-setInterval(createClock, 1);
+setInterval(createClock, 999);
+// setInterval(createClock, 1);
 
 // Attach a click event listener to each icon
 prenexIcons.forEach(icon => {
