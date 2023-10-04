@@ -48,12 +48,12 @@
         <form id="new_task_form">
             <div id="task_date_and_time_div">
                 <label for="input_task"></label>
-                <input type="text" name="new_task" placeholder="What are you planning to do?" id="input_task" required="required"/>
+                <input type="text" name="new_task" placeholder="What are you planning to do?" id="input_task" required="required" autocomplete="off"/>
                 <label id="label_for_date_time_due">Task deadline:
-                    <input type="text" value="" id="pickADateAndTime" class="pickADateAndTime"/>
+                    <input type="text" value="" id="pickADateAndTime" class="pickADateAndTime" autocomplete="off"/>
                 </label>
                 <label id="task_weight">Priority of task:
-                    <select id="task_importance">
+                    <select id="task_importance" required="required">
                         <option disabled selected value> -- select an option -- </option>
                         <option value="0">Urgent</option>
                         <option value="1">Important</option>

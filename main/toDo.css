@@ -60,6 +60,16 @@ h1 {
     scale: 1.1;
     background-color: lightgreen;
 }
+.sortByTimeButton {
+    font-size: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+    transition: 0.5s;
+}
+.sortByTimeButton:hover {
+    scale: 1.1;
+    background-color: lightgrey;
+}
 button {
     border-radius: 10px;
 }
@@ -161,24 +171,31 @@ ul li a {
     position:relative;
     top:5px;
     background: red;
+    border: 2px solid red;
 }
 .important {
     transform:rotate(-3deg);
     position:relative;
     top:-5px;
     background: coral;
+    border: 2px solid coral;
 }
 .medium {
     transform:rotate(2deg);
     position:relative;
     background: yellow;
+    border: 2px solid yellow;
     top:-10px;
 }
 .low {
     transform:rotate(-7deg);
     position:relative;
     background: lightgreen;
+    border: 2px solid lightgreen;
     top:-4px;
+}
+.expired {
+    opacity: 0.5;
 }
 .priorityElem {
     font-size: 20px;

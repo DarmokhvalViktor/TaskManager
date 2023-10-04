@@ -34,6 +34,8 @@ function createH2ElementIfNotPresent() {
         h2Element.innerText = "Tasks:";
         createDeleteButton();
         createSortButton();
+        createSortByTimeButton();
+        createTrashDiv();
     }
 }
 function createDeleteButton() {
@@ -53,15 +55,30 @@ function createSortButton() {
     sortButton.innerText = `Sort tasks by priority`;
     sortButton.classList.add("sortButton");
     h2Element.appendChild(sortButton);
-    sortTaskByPriority(tasksFromLocalStorage);
+    sortButton.addEventListener("click", () => {
+        sortTaskByPriority(tasksFromLocalStorage);
+        displayTasks();
+    })
+}
+function createSortByTimeButton() {
+    let sortByTimeButton = document.createElement("button");
+    sortByTimeButton.innerText = `Sort tasks by date`;
+    sortByTimeButton.classList.add("sortByTimeButton");
+    h2Element.appendChild(sortByTimeButton);
+    sortByTimeButton.addEventListener("click", () => {
+        sortTasksByDate(tasksFromLocalStorage);
+        displayTasks();
+    })
 }
 
 function displayTasks() {
     createH2ElementIfNotPresent();
+    tasksUl.innerText = "";
 
     tasksFromLocalStorage.forEach((element) => {
         createDivs(element.task,   element.priority, element.dayTimeObject, liCounter);
     })
+    localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage));
 }
 
 function createTrashDiv() {
@@ -79,7 +96,7 @@ function createTrashDiv() {
     trash_div.addEventListener("dragover", (event) => {
         event.preventDefault();
     })
-    tasksUl.append(trash_div);
+    h2Element.append(trash_div);
 }
 function prioritizeTask(taskPriority) {
     switch (taskPriority) {
@@ -93,14 +110,32 @@ function prioritizeTask(taskPriority) {
             return "low";
     }
 }
+
+//Sorts tasks by priority
 function sortTaskByPriority(tasksArray) {
     tasksArray.sort((a, b) => a.priority.priorityNumber - b.priority.priorityNumber);
 }
 
+//function that sort tasks by their deadline date
 function sortTasksByDate(tasksArray) {
+    tasksArray.sort((a, b) => {
+        let aDayTime = a.dayTimeObject;
+        let bDayTime = b.dayTimeObject;
+        let aDate = transformDate(aDayTime);
+        let bDate = transformDate(bDayTime);
 
+        return new Date(aDate) - new Date(bDate)
+    });
 }
 
+//Transforms date from dd-mm-yyyy format to mm-dd-yyyy
+function transformDate(date) {
+    let transformed = date.split(/\W/);
+    return transformed[1] + "-" + transformed[0] + "-" + transformed[2] + " " + transformed[3] + ":" + transformed[4];
+}
+
+let count = 0;
+//function that creates blocks that hold tasks
 function createDivs(taskValue, taskPriority, dayAndTimeObject) {
 
     let taskPrior = prioritizeTask(taskPriority.priorityNumber)
@@ -112,10 +147,6 @@ function createDivs(taskValue, taskPriority, dayAndTimeObject) {
     task_element.setAttribute("id", "List_" + liCounter++);
     task_element.classList.add("task");
 
-    if(!trash_div) {
-        createTrashDiv();
-    }
-
     let task_content_element = document.createElement("a");
     // task_content_element.contentEditable = "true";
     task_content_element.classList.add("content");
@@ -123,6 +154,15 @@ function createDivs(taskValue, taskPriority, dayAndTimeObject) {
 
     let dateAndTime = document.createElement("div");
     dateAndTime.classList.add("dateAndTimeDiv");
+
+    if(Date.now() > new Date(transformDate(dayAndTimeObject)).getTime()) {
+        console.log("Expired")
+        task_content_element.classList.add("expired")
+    } else {
+        console.log("Not expired")
+        task_content_element.classList.remove("expired")
+    }
+
     dayAndTimeObject = dayAndTimeObject.split(" ");
     dateAndTime.innerHTML = `Deadline:` + `<br/>` + dayAndTimeObject[0] + `<br/>` + dayAndTimeObject[1];
 
@@ -144,21 +184,11 @@ function createDivs(taskValue, taskPriority, dayAndTimeObject) {
 
 }
 
+//function that let us create new task, call function createDivs to draw task or tasks if there are more than one
+// on page and adds task to browser local storage
 function submitTask() {
     let task = inputTask.value;
     let dayAndTime = inputDayAndTime.value;
-    let dat2 = dayAndTime.split(" ");
-    let date0 = dat2[0].split("-");
-    let tempSwap = date0[0];
-    date0[0] = date0[1];
-    date0[1] = tempSwap;
-    console.log(date0);
-    dat2[0] = date0;
-
-    let dat3 = dayAndTime.split(/\W/);
-    console.log(dat2);
-    console.log(new Date(dat2));
-    console.log(new Date(dayAndTime))
     let taskPriority = {priorityNumber: parseInt(inputTaskImportance.options[inputTaskImportance.selectedIndex].value),
         priorityText: inputTaskImportance.options[inputTaskImportance.selectedIndex].text};
 
@@ -175,11 +205,8 @@ function submitTask() {
         inputTaskImportance.value = "";
     }
 }
+//flatpickr library, using to let user not type date and time, but choose from expanding window
 $("#pickADateAndTime").flatpickr({enableTime: true, dateFormat: "d-m-Y H:i", allowInput: true, time_24hr: true,
     "locale": {
         "firstDayOfWeek": 1}
 });
-
-//test to see options
-// console.log(inputTaskImportance.options[inputTaskImportance.selectedIndex].value)
-// console.log(inputTaskImportance.options[inputTaskImportance.selectedIndex].text)
