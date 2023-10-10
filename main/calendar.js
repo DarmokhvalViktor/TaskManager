@@ -1,15 +1,17 @@
 let date = new Date();
-let year = date.getFullYear();
 let month = date.getMonth();
+let year = date.getFullYear();
 let clock = document.getElementById("clock");
+let todayButton = document.getElementById("today");
 
-const day = document.querySelector(".calendar-dates");
+const daysDiv = document.querySelector(".calendar-dates");
 
-const currentDate = document
+const currentMonthAndYear = document
     .querySelector(".calendar-current-date");
 
-const prenexIcons = document
-    .querySelectorAll(".calendar-navigation span");
+
+const calendar_prev = document.getElementById("calendar-prev");
+const calendar_next = document.getElementById("calendar-next");
 
 // Array of month names
 const months = [
@@ -70,53 +72,61 @@ const manipulate = () => {
 
     // Update the text of the current date element
     // with the formatted current month and year
-    currentDate.innerText = `${months[month]} ${year}`;
+    currentMonthAndYear.innerText = `${months[month]} ${year}`;
 
     // update the HTML of the dates element
     // with the generated calendar
-    day.innerHTML = lit;
+    hideTodayButton();
+    daysDiv.innerHTML = lit;
+
 }
 
 manipulate();
+//setting interval to update time, almost every second it re-using function createClock()
 setInterval(createClock, 999);
 // setInterval(createClock, 1);
 
-// Attach a click event listener to each icon
-prenexIcons.forEach(icon => {
-
-    // When an icon is clicked
-    icon.addEventListener("click", () => {
-
-        // Check if the icon is "calendar-prev"
-        // or "calendar-next"
-        month = icon.id === "calendar-prev" ? month - 1 : month + 1;
-
-        // Check if the month is out of range
-        if (month < 0 || month > 11) {
-
-            // Set the date to the first day of the
-            // month with the new year
-            date = new Date(year, month, new Date().getDate());
-
-            // Set the year to the new year
-            year = date.getFullYear();
-
-            // Set the month to the new month
-            month = date.getMonth();
-        }
-
-        else {
-
-            // Set the date to the current date
-            date = new Date();
-        }
-
-        // Call the manipulate function to
-        // update the calendar display
-        manipulate();
-    });
+//event on next button to display next month
+calendar_next.addEventListener("click", () => {
+    // increase current month by one
+    month++;
+    if (month > 11) {
+        // if month gets greater than 11 make it 0 and increase year by one
+        month = 0;
+        year++;
+    }
+    // rerender calendar
+    manipulate();
 });
-
+//event on previous button to display previous month
+calendar_prev.addEventListener("click", () => {
+    // decrease current month by one
+    month--;
+    // check if let than 0 then make it 11 and decrease year
+    if (month < 0) {
+        month = 11;
+        year--;
+    }
+    manipulate();
+});
+//function to hide button that redirects us to today's date
+function hideTodayButton() {
+    if (
+        month === new Date().getMonth() &&
+        year === new Date().getFullYear()
+    ) {
+        todayButton.style.display = "none";
+    } else {
+        todayButton.style.display = "flex";
+    }
+}
+//add event on click on today button
+todayButton.addEventListener("click", () => {
+    month = date.getMonth();
+    year = date.getFullYear();
+    manipulate();
+})
+//function to create clock that displays current time on page
 function createClock() {
     let date = new Date();
     let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

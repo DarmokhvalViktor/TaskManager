@@ -1,17 +1,28 @@
+//select form block, mainly to save task when use button\or press "enter"
 let form = document.getElementById("new_task_form");
+//select text of the new task
 let inputTask = document.getElementById("input_task");
+//select date and time of the new task
 let inputDayAndTime = document.getElementById("pickADateAndTime");
+//select priority of the new task
 let inputTaskImportance = document.getElementById("task_importance");
+//select block that holds header with button sort\delete\trash icon\block with all tasks
 let main_task_element = document.getElementById("main_tasks");
+//select block with all tasks
 let tasksUl = document.createElement("ul");
 tasksUl.classList.add("mainUl");
+//I don't need those elements when there is no tasks assigned, so when starting program assigning them to null,
+// and after creating when it needed
 let h2Element = null;
 let trash_div = null;
 let liCounter = 0;
 
+//Get any stored info from LS, else use empty array
 let tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks")) || [];
 
+//On page load display if any task is already set, else only calendar + form to submit new task
 window.addEventListener("load", () => {
+    //check if any task is stored already then display on page
     if(tasksFromLocalStorage.length) {
         displayTasks();
     }
@@ -27,17 +38,18 @@ window.addEventListener("load", () => {
         }
     });
 })
-
+//function to create header that holds sort and delete buttons, using when displaying\creating task
 function createH2ElementIfNotPresent() {
     if(!h2Element) {
         h2Element = document.createElement("h2");
         h2Element.innerText = "Tasks:";
         createDeleteButton();
-        createSortButton();
+        createSortByPriorityButton();
         createSortByTimeButton();
         createTrashDiv();
     }
 }
+//function to create button that delets all tasks
 function createDeleteButton() {
     let deleteAllTasksButton = document.createElement("button");
     deleteAllTasksButton.innerText = "Delete all tasks";
@@ -49,17 +61,18 @@ function createDeleteButton() {
     });
     h2Element.appendChild(deleteAllTasksButton);
 }
-
-function createSortButton() {
+//function to create button that sort tasks by priority
+function createSortByPriorityButton() {
     let sortButton = document.createElement("button");
     sortButton.innerText = `Sort tasks by priority`;
-    sortButton.classList.add("sortButton");
+    sortButton.classList.add("sortByPriorityButton");
     h2Element.appendChild(sortButton);
     sortButton.addEventListener("click", () => {
         sortTaskByPriority(tasksFromLocalStorage);
         displayTasks();
     })
 }
+//function to create button that sort tasks by time of their deadline
 function createSortByTimeButton() {
     let sortByTimeButton = document.createElement("button");
     sortByTimeButton.innerText = `Sort tasks by date`;
@@ -70,7 +83,7 @@ function createSortByTimeButton() {
         displayTasks();
     })
 }
-
+//function that executed when page is loaded or task is created\deleted, re-displaying all tasks
 function displayTasks() {
     createH2ElementIfNotPresent();
     tasksUl.innerText = "";
@@ -80,24 +93,42 @@ function displayTasks() {
     })
     localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage));
 }
-
+//function that creates block for task and display it on page
 function createTrashDiv() {
     trash_div = document.createElement("div");
     trash_div.classList.add("trashDiv");
+
+    //add event that allows to drag'n'drop task in trash_div to delete task
     trash_div.addEventListener("drop", (event) => {
         event.preventDefault();
+        $(event.target).attr("drop-active", true);
+
         let data= event.dataTransfer.getData("Text");
         let el = document.getElementById(data);
+
         let valueToDelete = el.childNodes[0].childNodes[2].textContent;
         tasksFromLocalStorage = tasksFromLocalStorage.filter(task => task.task !== valueToDelete);
+        //TODO with includes or not?
+        tasksFromLocalStorage.includes()
+        let string = [];
+        string.includes()
+
         localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage));
         el.parentNode.removeChild(el);
     });
+
+    trash_div.addEventListener("dragleave", (event) => {
+        $(event.target).removeAttr("drop-active");
+    })
+
     trash_div.addEventListener("dragover", (event) => {
         event.preventDefault();
+        $(event.target).attr("drop-active", true);
     })
     h2Element.append(trash_div);
 }
+
+//function that take value priority from input and adds corresponding class to allow css style it
 function prioritizeTask(taskPriority) {
     switch (taskPriority) {
         case 0:
@@ -140,14 +171,19 @@ function createDivs(taskValue, taskPriority, dayAndTimeObject) {
 
     let taskPrior = prioritizeTask(taskPriority.priorityNumber)
     let task_element = document.createElement("li");
+
     task_element.setAttribute("draggable", "true");
+
     task_element.addEventListener("dragstart", (event) => {
         event.dataTransfer.setData("Text",event.target.id);
     });
+
     task_element.setAttribute("id", "List_" + liCounter++);
     task_element.classList.add("task");
 
     let task_content_element = document.createElement("a");
+    //TODO check for different approach on edit content
+    //this should make content editable, but i'm not sure if it is necessity or there is a better approach
     // task_content_element.contentEditable = "true";
     task_content_element.classList.add("content");
     task_content_element.classList.add(taskPrior)
@@ -155,6 +191,8 @@ function createDivs(taskValue, taskPriority, dayAndTimeObject) {
     let dateAndTime = document.createElement("div");
     dateAndTime.classList.add("dateAndTimeDiv");
 
+    //need to refactor as a function, but for now it checks if task deadline not passed already,
+    // if yes - adds class that modifies appearance of that task
     if(Date.now() > new Date(transformDate(dayAndTimeObject)).getTime()) {
         console.log("Expired")
         task_content_element.classList.add("expired")
@@ -184,7 +222,7 @@ function createDivs(taskValue, taskPriority, dayAndTimeObject) {
 
 }
 
-//function that let us create new task, call function createDivs to draw task or tasks if there are more than one
+//function that let us create new task, call createDivs() to draw task or tasks if there are more than one
 // on page and adds task to browser local storage
 function submitTask() {
     let task = inputTask.value;

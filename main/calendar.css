@@ -17,7 +17,7 @@
 .calendar-container header {
     display: flex;
     align-items: center;
-    padding: 5px 90px 5px;
+    padding: 5px 60px 5px;
     justify-content: space-between;
 }
 
@@ -36,6 +36,25 @@ header .calendar-navigation span {
     user-select: none;
     color: #aeabab;
     font-size: 1.9rem;
+    transition: 0.5s;
+}
+#today {
+    cursor: pointer;
+    text-align: center;
+    line-height: 38px;
+    border: 1px solid silver;
+    background: lightgoldenrodyellow;
+    border-radius: 20%;
+    color: #000000;
+    margin-right: 10px;
+    transition: 0.5s;
+    padding: 2px;
+    user-select: none;
+}
+#today:hover {
+    background: yellow;
+    scale: 1.15;
+
 }
 
 .calendar-navigation span:last-child {
@@ -44,6 +63,7 @@ header .calendar-navigation span {
 
 header .calendar-navigation span:hover {
     background: #f2f2f2;
+    scale: 1.15;
 }
 
 header .calendar-current-date {

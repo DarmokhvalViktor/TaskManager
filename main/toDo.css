@@ -1,4 +1,3 @@
-/* Include the padding and border in an element's total width and height */
 * {
     box-sizing: border-box;
 }
@@ -50,13 +49,13 @@ h1 {
     background: red;
     color: white;
 }
-.sortButton {
+.sortByPriorityButton {
     font-size: 20px;
     margin-left: 20px;
     cursor: pointer;
     transition: 0.5s;
 }
-.sortButton:hover {
+.sortByPriorityButton:hover {
     scale: 1.1;
     background-color: lightgreen;
 }
@@ -231,10 +230,18 @@ ul li a:hover, ul li a:focus{
     background-size: contain;
     background-repeat: no-repeat;
     position: absolute;
-    right: 10px;
+    cursor: pointer;
+    border: 1px solid red;
+    border-radius: 50%;
+    right: 20px;
     top: 50%;
     transition: 0.5s;
 }
 .trashDiv:hover {
+    scale: 1.15;
+    background-color: red;
+}
+.trashDiv[drop-active=true] {
+    background-color: darkviolet;
     scale: 1.15;
 }
