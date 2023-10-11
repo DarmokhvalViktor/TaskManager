@@ -45,10 +45,11 @@ function createH2ElementIfNotPresent() {
         h2Element.innerText = "Tasks:";
         createDeleteButton();
         createSortByPriorityButton();
-        createSortByTimeButton();
+        createSortByDeadlineButton();
         createTrashDiv();
     }
 }
+
 //function to create button that delets all tasks
 function createDeleteButton() {
     let deleteAllTasksButton = document.createElement("button");
@@ -61,6 +62,7 @@ function createDeleteButton() {
     });
     h2Element.appendChild(deleteAllTasksButton);
 }
+
 //function to create button that sort tasks by priority
 function createSortByPriorityButton() {
     let sortButton = document.createElement("button");
@@ -72,17 +74,19 @@ function createSortByPriorityButton() {
         displayTasks();
     })
 }
+
 //function to create button that sort tasks by time of their deadline
-function createSortByTimeButton() {
+function createSortByDeadlineButton() {
     let sortByTimeButton = document.createElement("button");
     sortByTimeButton.innerText = `Sort tasks by date`;
     sortByTimeButton.classList.add("sortByTimeButton");
     h2Element.appendChild(sortByTimeButton);
     sortByTimeButton.addEventListener("click", () => {
-        sortTasksByDate(tasksFromLocalStorage);
+        sortTasksByDeadline(tasksFromLocalStorage);
         displayTasks();
     })
 }
+
 //function that executed when page is loaded or task is created\deleted, re-displaying all tasks
 function displayTasks() {
     createH2ElementIfNotPresent();
@@ -93,6 +97,7 @@ function displayTasks() {
     })
     localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage));
 }
+
 //function that creates block for task and display it on page
 function createTrashDiv() {
     trash_div = document.createElement("div");
@@ -107,6 +112,7 @@ function createTrashDiv() {
         let el = document.getElementById(data);
 
         let valueToDelete = el.childNodes[0].childNodes[2].textContent;
+        //TODO deletes all tasks with the same content inside, need to change somehow
         tasksFromLocalStorage = tasksFromLocalStorage.filter(task => task.task !== valueToDelete);
         //TODO with includes or not?
         tasksFromLocalStorage.includes()
@@ -148,14 +154,15 @@ function sortTaskByPriority(tasksArray) {
 }
 
 //function that sort tasks by their deadline date
-function sortTasksByDate(tasksArray) {
+function sortTasksByDeadline(tasksArray) {
     tasksArray.sort((a, b) => {
         let aDayTime = a.dayTimeObject;
         let bDayTime = b.dayTimeObject;
-        let aDate = transformDate(aDayTime);
-        let bDate = transformDate(bDayTime);
-
-        return new Date(aDate) - new Date(bDate)
+        let aDate2 = new Date(+aDayTime.year, +aDayTime.month,
+            +aDayTime.day, +aDayTime.hours, +aDayTime.minutes);
+        let bDate2 = new Date(+bDayTime.year, +bDayTime.month,
+            +bDayTime.day, +bDayTime.hours, +bDayTime.minutes);
+        return aDate2 - bDate2
     });
 }
 
@@ -165,7 +172,9 @@ function transformDate(date) {
     return transformed[1] + "-" + transformed[0] + "-" + transformed[2] + " " + transformed[3] + ":" + transformed[4];
 }
 
+//NOT sure why do I need this counter for
 let count = 0;
+
 //function that creates blocks that hold tasks
 function createDivs(taskValue, taskPriority, dayAndTimeObject) {
 
@@ -182,6 +191,7 @@ function createDivs(taskValue, taskPriority, dayAndTimeObject) {
     task_element.classList.add("task");
 
     let task_content_element = document.createElement("a");
+
     //TODO check for different approach on edit content
     //this should make content editable, but i'm not sure if it is necessity or there is a better approach
     // task_content_element.contentEditable = "true";
@@ -191,9 +201,8 @@ function createDivs(taskValue, taskPriority, dayAndTimeObject) {
     let dateAndTime = document.createElement("div");
     dateAndTime.classList.add("dateAndTimeDiv");
 
-    //need to refactor as a function, but for now it checks if task deadline not passed already,
-    // if yes - adds class that modifies appearance of that task
-    if(Date.now() > new Date(transformDate(dayAndTimeObject)).getTime()) {
+    if(new Date().getTime() > new Date(+dayAndTimeObject.year, +dayAndTimeObject.month - 1,+dayAndTimeObject.day,
+        +dayAndTimeObject.hours, +dayAndTimeObject.minutes).getTime()) {
         console.log("Expired")
         task_content_element.classList.add("expired")
     } else {
@@ -201,8 +210,9 @@ function createDivs(taskValue, taskPriority, dayAndTimeObject) {
         task_content_element.classList.remove("expired")
     }
 
-    dayAndTimeObject = dayAndTimeObject.split(" ");
-    dateAndTime.innerHTML = `Deadline:` + `<br/>` + dayAndTimeObject[0] + `<br/>` + dayAndTimeObject[1];
+    dayAndTimeObject = [dayAndTimeObject.day, dayAndTimeObject.month, dayAndTimeObject.year, dayAndTimeObject.hours, dayAndTimeObject.minutes]
+    dateAndTime.innerHTML = `Deadline:` + `<br/>` + dayAndTimeObject[0] + "-" + dayAndTimeObject[1] + "-" + dayAndTimeObject[2] +
+         `<br/>` + dayAndTimeObject[3] + ":" + dayAndTimeObject[4];
 
     let priorityElem = document.createElement("div");
     priorityElem.classList.add("priorityElem");
@@ -227,15 +237,25 @@ function createDivs(taskValue, taskPriority, dayAndTimeObject) {
 function submitTask() {
     let task = inputTask.value;
     let dayAndTime = inputDayAndTime.value;
-    let taskPriority = {priorityNumber: parseInt(inputTaskImportance.options[inputTaskImportance.selectedIndex].value),
+    let transformedDateArray = dayAndTime.split(/\W/);
+    console.log(transformedDateArray)
+    let dateAndTimeObject = {
+        day : transformedDateArray[0],
+        month: transformedDateArray[1],
+        year : transformedDateArray[2],
+        hours : transformedDateArray[3],
+        minutes : transformedDateArray[4]
+    }
+    let taskPriority =
+        {priorityNumber: parseInt(inputTaskImportance.options[inputTaskImportance.selectedIndex].value),
         priorityText: inputTaskImportance.options[inputTaskImportance.selectedIndex].text};
 
     if(task) {
         createH2ElementIfNotPresent();
 
-        createDivs( task, taskPriority, dayAndTime);
+        createDivs( task, taskPriority, dateAndTimeObject);
 
-        tasksFromLocalStorage.push({task: task, priority: taskPriority, dayTimeObject: dayAndTime});
+        tasksFromLocalStorage.push({task: task, priority: taskPriority, dayTimeObject: dateAndTimeObject});
         localStorage.setItem("tasks", JSON.stringify(tasksFromLocalStorage));
 
         inputTask.value = "";

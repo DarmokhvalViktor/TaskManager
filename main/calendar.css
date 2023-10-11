@@ -24,8 +24,7 @@
 header .calendar-navigation {
     display: flex;
 }
-
-header .calendar-navigation span {
+.navButton {
     height: 38px;
     width: 38px;
     margin: 0 1px;
@@ -38,30 +37,59 @@ header .calendar-navigation span {
     font-size: 1.9rem;
     transition: 0.5s;
 }
+#calendar-prev {
+    margin-left: -10px;
+}
+#calendar-next {
+    margin-right: -20px;
+}
+#goToDateDiv{
+    margin-left: 50px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
 #today {
+    width: fit-content;
     cursor: pointer;
     text-align: center;
     line-height: 38px;
-    border: 1px solid silver;
+    border: 1px solid steelblue;
     background: lightgoldenrodyellow;
-    border-radius: 20%;
+    border-radius: 50%;
     color: #000000;
     margin-right: 10px;
-    transition: 0.5s;
     padding: 2px;
     user-select: none;
+    transition: 0.5s;
 }
 #today:hover {
-    background: yellow;
-    scale: 1.15;
-
+    background: gold;
+    scale: 1.10;
+}
+#goToDateInput{
+    border-radius: 10px;
+    min-height: 25px;
+}
+#goToButton {
+    background-color: lightgoldenrodyellow;
+    font-size: 15px;
+    user-select: none;
+    cursor: pointer;
+    transition: 0.5s;
+}
+#goToButton:hover {
+    scale: 1.1;
+    background-color: gold;
+}
+.calendar-dates .previous {
+    color: lightgrey;
+}
+.calendar-dates .next {
+    color: lightgrey;
 }
 
-.calendar-navigation span:last-child {
-    margin-right: -10px;
-}
-
-header .calendar-navigation span:hover {
+.navButton:hover {
     background: #f2f2f2;
     scale: 1.15;
 }

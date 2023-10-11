@@ -14,12 +14,10 @@
     <div class="main_calendar_container">
         <div class="calendar-container">
             <header class="calendar-header">
+                <div id="calendar-prev" class="navButton">&#8592</div>
                 <p class="calendar-current-date"></p>
-                <div class="calendar-navigation">
-                <div id="today">Today</div>
-                <span id="calendar-prev">&#8592</span>
-                <span id="calendar-next">&#8594</span>
-                </div>
+
+                <div id="calendar-next" class="navButton">&#8594</div>
             </header>
 
             <div class="calendar-body">
@@ -34,6 +32,20 @@
                 </ul>
                 <ul class="calendar-dates"></ul>
             </div>
+            <div id="goToDateDiv">
+                <div id="goToDate">
+                    <input type="text" placeholder="mm/yyyy" id="goToDateInput" required="required" autocomplete="off"/>
+                    <button id="goToButton">Go to date</button>
+                </div>
+                <div id="today">Today</div>
+            </div>
+        </div>
+        <div class="right_calendar_block">Info about task:
+            <div class="todayDayAndDate">
+                <div class="todayDay"></div>
+                <div class="todayDate"></div>
+            </div>
+            <div class="todayTasksContainer"></div>
         </div>
     </div>
 

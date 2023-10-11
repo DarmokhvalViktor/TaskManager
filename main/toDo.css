@@ -10,11 +10,24 @@ body {
 
 #header {
     display: flex;
-    justify-content: space-evenly;
+    /*justify-content: space-evenly;*/
     align-items: center;
     margin: 0;
-    padding-top: 20px;
+    padding-top: 5px;
+    padding-left: 5px;
     text-align: center;
+}
+.main_calendar_container{
+    display: flex;
+    background-color: lightslategray;
+    border-radius: 10px;
+    box-shadow: 5px 10px 7px rgba(0, 0, 0, 0.7);
+}
+.right_calendar_block {
+    background:none;
+    min-height: 515px;
+    min-width: 300px;
+
 }
 #clock {
     height: 50px;
@@ -35,9 +48,9 @@ h1 {
 }
 .deleteAllTasks {
     font-size: 20px;
-    background-color: seagreen;
-    border: 1px solid black;
-    border-radius: 5px;
+    background-color: lightcoral;
+    border: 2px solid black;
+    border-radius: 10px;
     height: 30px;
     margin-left: 30px;
     color: black;
@@ -45,7 +58,7 @@ h1 {
     transition: 0.5s;
 }
 .deleteAllTasks:hover {
-    scale: 1.05;
+    scale: 1.1;
     background: red;
     color: white;
 }
@@ -57,7 +70,7 @@ h1 {
 }
 .sortByPriorityButton:hover {
     scale: 1.1;
-    background-color: lightgreen;
+    background-color: gold;
 }
 .sortByTimeButton {
     font-size: 20px;
@@ -67,7 +80,7 @@ h1 {
 }
 .sortByTimeButton:hover {
     scale: 1.1;
-    background-color: lightgrey;
+    background-color: gold;
 }
 button {
     border-radius: 10px;
@@ -230,7 +243,7 @@ ul li a:hover, ul li a:focus{
     background-size: contain;
     background-repeat: no-repeat;
     position: absolute;
-    cursor: pointer;
+    /*cursor: pointer;*/
     border: 1px solid red;
     border-radius: 50%;
     right: 20px;
@@ -238,7 +251,7 @@ ul li a:hover, ul li a:focus{
     transition: 0.5s;
 }
 .trashDiv:hover {
-    scale: 1.15;
+    scale: 1.05;
     background-color: red;
 }
 .trashDiv[drop-active=true] {
